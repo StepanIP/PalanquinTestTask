@@ -33,16 +33,18 @@ public class DateSorter {
      */
 
     public Collection<LocalDate> sortDates(List<LocalDate> unsortedDates) {
-        Comparator<LocalDate> monthComparator = Comparator.comparing(date -> date.getMonth().toString());
+        Comparator<LocalDate> dateComparator = Comparator.comparing(LocalDate::getYear)
+                .thenComparing(LocalDate::getMonth)
+                .thenComparing(LocalDate::getDayOfMonth);
 
         List<LocalDate> datesWithR = unsortedDates.stream()
                 .filter(date -> date.getMonth().toString().contains("R"))
-                .sorted(monthComparator)
+                .sorted(dateComparator)
                 .collect(Collectors.toList());
 
         List<LocalDate> datesWithoutR = unsortedDates.stream()
                 .filter(date -> !date.getMonth().toString().contains("R"))
-                .sorted(monthComparator.reversed())
+                .sorted(dateComparator.reversed())
                 .toList();
 
         datesWithR.addAll(datesWithoutR);
