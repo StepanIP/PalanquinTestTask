@@ -1,10 +1,11 @@
 package sample;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 /**
  * Marking will be based upon producing a readable, well engineered solution rather than factors
@@ -37,15 +38,19 @@ public class DateSorter {
                 .thenComparing(LocalDate::getMonth)
                 .thenComparing(LocalDate::getDayOfMonth);
 
-        List<LocalDate> datesWithR = unsortedDates.stream()
-                .filter(date -> date.getMonth().toString().contains("R"))
-                .sorted(dateComparator)
-                .collect(Collectors.toList());
+        List<LocalDate> datesWithR = new ArrayList<>();
+        List<LocalDate> datesWithoutR = new ArrayList<>();
 
-        List<LocalDate> datesWithoutR = unsortedDates.stream()
-                .filter(date -> !date.getMonth().toString().contains("R"))
-                .sorted(dateComparator.reversed())
-                .toList();
+        for (LocalDate date : unsortedDates) {
+            if (date.getMonth().toString().contains("R")) {
+                datesWithR.add(date);
+            } else {
+                datesWithoutR.add(date);
+            }
+        }
+
+        datesWithR.sort(dateComparator);
+        datesWithoutR.sort(dateComparator.reversed());
 
         datesWithR.addAll(datesWithoutR);
         return datesWithR;
